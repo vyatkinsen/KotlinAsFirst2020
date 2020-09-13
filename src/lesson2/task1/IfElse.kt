@@ -6,6 +6,7 @@ import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.math.pow
+import kotlin.math.abs
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
@@ -100,6 +101,7 @@ fun timeForHalfWay(
 }
 
 
+
 /**
  * Простая (2 балла)
  *
@@ -139,8 +141,8 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val difX = kotlin.math.abs(kingX - bishopX)
-    val difY = kotlin.math.abs(kingY - bishopY)
+    val difX = abs(kingX - bishopX)
+    val difY = abs(kingY - bishopY)
     return when {
         difX == difY && (kingY == rookY || kingX == rookX) -> 3
         kingX == rookX || kingY == rookY -> 1
