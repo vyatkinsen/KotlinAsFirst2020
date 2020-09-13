@@ -5,7 +5,6 @@ package lesson2.task1
 import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
-import kotlin.math.abs
 import kotlin.math.pow
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
@@ -114,7 +113,7 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int,
-): Int = when {
+) = when {
     (kingX == rookX1 && kingX == rookX2)
             || (kingY == rookY1 && kingY == rookY2)
             || (kingX == rookX1 && kingY == rookY2)
@@ -134,17 +133,18 @@ fun whichRookThreatens(
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
+
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
-    bishopX: Int, bishopY: Int,
+    bishopX: Int, bishopY: Int
 ): Int {
-    val differenceX = abs(kingX - bishopX)
-    val differenceY = abs(kingY - bishopY)
+    val difX = kotlin.math.abs(kingX - bishopX)
+    val difY = kotlin.math.abs(kingY - bishopY)
     return when {
-        differenceX == differenceY && kingY == rookY || kingX == rookX -> 3
+        difX == difY && (kingY == rookY || kingX == rookX) -> 3
         kingX == rookX || kingY == rookY -> 1
-        differenceX == differenceY -> 2
+        difX == difY -> 2
         else -> 0
     }
 }
