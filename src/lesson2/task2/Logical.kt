@@ -41,9 +41,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int) =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int) = when (month) {
-    2 ->
-        if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) 29
-        else 28
+    2 -> if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) 29 else 28
     4, 6, 9, 11 -> 30
     else -> 31
 }
@@ -72,7 +70,7 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int) =
-    (a <= r) && (b <= s || c <= s)
-            || (a <= s) && (b <= r || c <= r)
-            || (b <= r) && (c <= s)
-            || (c <= r) && (b <= s)
+    a <= r && (b <= s || c <= s)
+            || a <= s && (b <= r || c <= r)
+            || b <= r && c <= s
+            || c <= r && b <= s
