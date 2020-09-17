@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_PARAMETER")
+@file:Suppress("UNUSED_PARAMETER", "UNREACHABLE_CODE")
 
 package lesson3.task1
 
@@ -72,7 +72,16 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var count = 0
+    var number = n
+    if (number == 0) return 1
+    else while (number > 0) {
+        count++
+        number /= 10
+    }
+    return count
+}
 
 /**
  * Простая (2 балла)
@@ -80,14 +89,36 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    var num = n - 2
+    var x1 = 1
+    var x2 = 1
+    var s: Int
+    if (n < 2) return 1
+    while (num > 0) {
+        s = x1 + x2
+        x1 = x2
+        x2 = s
+        num--
+    }
+    return x2
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    var y = 0
+    for (x in 2..n) {
+        if (n % x == 0) {
+            y = x
+            break
+        }
+    }
+    return y
+}
 
 /**
  * Простая (2 балла)
@@ -147,7 +178,17 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var number = n
+    var newnumber = 0
+    var lastnum: Int
+    while (number > 0) {
+        lastnum = number % 10
+        newnumber = newnumber * 10 + lastnum
+        number /= 10
+    }
+    return newnumber
+}
 
 /**
  * Средняя (3 балла)
