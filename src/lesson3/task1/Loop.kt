@@ -74,14 +74,17 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var count = 0
-    var number = n
-    if (number == 0) return 1
-    else while (number > 0) {
-        count++
-        number /= 10
+    var num = n
+    if (n == 0) return 1
+    else {
+        while (num > 0) {
+            count++
+            num /= 10
+        }
     }
     return count
 }
+
 
 /**
  * Простая (2 балла)
@@ -110,14 +113,12 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var y = 0
-    for (x in 2..n) {
-        if (n % x == 0) {
-            y = x
+    for (y in 2..n)
+        if (n % y == 0) {
+            return y
             break
         }
-    }
-    return y
+    return 0
 }
 
 /**
@@ -125,7 +126,15 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (y in n - 1 downTo 1)
+        if (n % y == 0) {
+            return y
+            break
+        }
+    return 0
+}
+
 
 /**
  * Простая (2 балла)
@@ -199,7 +208,8 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = revert(n) - n == 0
+
 
 /**
  * Средняя (3 балла)
