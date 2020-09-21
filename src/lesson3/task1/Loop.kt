@@ -2,8 +2,10 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.math.PI
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -77,11 +79,9 @@ fun digitNumber(n: Int): Int {
     var count = 0
     var num = abs(n)
     if (n == 0) return 1
-    else {
-        while (num > 0) {
-            count++
-            num /= 10
-        }
+    while (num > 0) {
+        count++
+        num /= 10
     }
     return count
 }
@@ -97,10 +97,9 @@ fun fib(n: Int): Int {
     var num = n - 2
     var x1 = 1
     var x2 = 1
-    var s: Int
     if (n < 2) return 1
     while (num > 0) {
-        s = x1 + x2
+        val s = x1 + x2
         x1 = x2
         x2 = s
         num--
@@ -117,7 +116,6 @@ fun minDivisor(n: Int): Int {
     for (y in 2..n)
         if (n % y == 0) {
             return y
-            break
         }
     return 0
 }
@@ -128,10 +126,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (y in n - 1 downTo 1)
+    for (y in n / 2 downTo 1)
         if (n % y == 0) {
             return y
-            break
         }
     return 0
 }
@@ -190,14 +187,13 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  */
 fun revert(n: Int): Int {
     var number = n
-    var newnumber = 0
-    var lastnum: Int
+    var newNumber = 0
     while (number > 0) {
-        lastnum = number % 10
-        newnumber = newnumber * 10 + lastnum
+        val lastNum = number % 10
+        newNumber = newNumber * 10 + lastNum
         number /= 10
     }
-    return newnumber
+    return newNumber
 }
 
 /**
@@ -209,7 +205,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = revert(n) - n == 0
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 
 /**
