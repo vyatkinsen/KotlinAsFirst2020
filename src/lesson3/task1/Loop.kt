@@ -2,10 +2,9 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.sqrt
-import kotlin.math.PI
+
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -113,11 +112,10 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (y in 2..n)
-        if (n % y == 0) {
-            return y
-        }
-    return 0
+    for (y in 2..sqrt(n.toDouble()).toInt()) {
+        if (n % y == 0) return y
+    }
+    return n
 }
 
 /**
@@ -126,11 +124,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (y in n / 2 downTo 1)
+    for (y in n / 2 downTo sqrt(n.toDouble()).toInt())
         if (n % y == 0) {
             return y
         }
-    return 0
+    return 1
 }
 
 
