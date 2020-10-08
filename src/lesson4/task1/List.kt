@@ -272,7 +272,8 @@ fun russian(n: Int): String {
         "шесть ",
         "семь ",
         "восемь ",
-        "девять ")
+        "девять "
+    )
     val womanOnes = listOf(
         "",
         "одна ",
@@ -283,7 +284,8 @@ fun russian(n: Int): String {
         "шесть ",
         "семь ",
         "восемь ",
-        "девять ")
+        "девять "
+    )
     val tens = listOf(
         "",
         "десять ",
@@ -339,8 +341,15 @@ fun russian(n: Int): String {
         in 2..4 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысячи "
         in 5..9 -> thousandsNum = ones[n / 1000 % 10] + "тысяч "
         1 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысяча "
-        else -> if (n.toString().length > 3) {
-            thousandsNum = if (n / 1000 % 10 == 0) "$sixthNum$fifthNum" + "тысяч " else "$sixthNum$fifthNum" + "тысячи "
+        else -> {
+            if (n.toString().length > 3) {
+                if (n / 1000 % 10 == 0) thousandsNum = "$sixthNum$fifthNum" + "тысяч "
+                else when (n / 1000 % 10) {
+                    in 2..4 -> thousandsNum = "$sixthNum$fifthNum" + "тысячи "
+                    in 5..9 -> thousandsNum = "$sixthNum$fifthNum" + "тысяч "
+                    else -> thousandsNum = "$sixthNum$fifthNum" + "тысяча "
+                }
+            }
         }
     }
     return (seventhNum + thousandsNum + thirdNum + tensNum).trim()
