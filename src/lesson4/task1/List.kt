@@ -320,7 +320,7 @@ fun russian(n: Int): String {
         "восемнадцать ",
         "девятнадцать "
     )
-    var tensNum: String
+    val tensNum: String
     var thousandsNum = ""
     val firstNum = tens[n / 10 % 10]
     val secondNum = ones[n % 10]
@@ -343,5 +343,5 @@ fun russian(n: Int): String {
             thousandsNum = if (n / 1000 % 10 == 0) "$sixthNum$fifthNum" + "тысяч " else "$sixthNum$fifthNum" + "тысячи "
         }
     }
-    return (seventhNum + thousandsNum + thirdNum + tensNum).strip()
+    return (seventhNum + thousandsNum + thirdNum + tensNum).trim()
 }
