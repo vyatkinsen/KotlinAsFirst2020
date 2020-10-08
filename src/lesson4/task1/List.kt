@@ -241,7 +241,18 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val thousands = listOf("", "M", "MM", "MMM", "MMMM")
+    val hundreds = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+    val tens = listOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
+    val ones = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
+    val b = thousands[n / 1000]
+    val r = hundreds[n / 100 % 10]
+    val u = tens[n / 10 % 10]
+    val h = ones[n % 10]
+
+    return b + r + u + h
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -250,4 +261,87 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val ones = listOf(
+        "",
+        "один ",
+        "два ",
+        "три ",
+        "четыре ",
+        "пять ",
+        "шесть ",
+        "семь ",
+        "восемь ",
+        "девять ")
+    val womanOnes = listOf(
+        "",
+        "одна ",
+        "две ",
+        "три ",
+        "четыре ",
+        "пять ",
+        "шесть ",
+        "семь ",
+        "восемь ",
+        "девять ")
+    val tens = listOf(
+        "",
+        "десять ",
+        "двадцать ",
+        "тридцать ",
+        "сорок ",
+        "пятьдесят ",
+        "шестьдесят ",
+        "семьдесят ",
+        "восемьдесят ",
+        "девяносто "
+    )
+    val hundreds = listOf(
+        "",
+        "сто ",
+        "двести ",
+        "триста ",
+        "четыреста ",
+        "пятьсот ",
+        "шестьсот ",
+        "семьсот ",
+        "Восемьсот ",
+        "девятьсот "
+    )
+    val teens = listOf(
+        "",
+        "одиннадцать ",
+        "двенадцать ",
+        "тринадцать ",
+        "четырнадцать ",
+        "пятнадцать ",
+        "шестнадцать ",
+        "семнадцать ",
+        "восемнадцать ",
+        "девятнадцать "
+    )
+    var tensNum: String
+    var thousandsNum = ""
+    val firstNum = tens[n / 10 % 10]
+    val secondNum = ones[n % 10]
+    val thirdNum = hundreds[n / 100 % 10]
+    val fifthNum = womanOnes[n / 1000 % 10]
+    val sixthNum = tens[n / 10000 % 10]
+    val seventhNum = hundreds[n / 100000 % 10]
+    if (n == 0) return "ноль"
+    tensNum = when (n % 100) {
+        in 11..19 -> teens[n % 10]
+        in 1..9 -> ones[n % 10]
+        else -> "$firstNum$secondNum"
+    }
+    when (n / 1000 % 100) {
+        in 11..19 -> thousandsNum = teens[n / 1000 % 10] + "тысяч "
+        in 2..4 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысячи "
+        in 5..9 -> thousandsNum = ones[n / 1000 % 10] + "тысяч "
+        1 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысяча "
+        else -> if (n.toString().length > 3) {
+            thousandsNum = if (n / 1000 % 10 == 0) "$sixthNum$fifthNum" + "тысяч " else "$sixthNum$fifthNum" + "тысячи "
+        }
+    }
+    return (seventhNum + thousandsNum + thirdNum + tensNum).strip()
+}
