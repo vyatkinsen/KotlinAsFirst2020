@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.digitNumber
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -264,66 +265,65 @@ fun roman(n: Int): String {
 fun russian(n: Int): String {
     val ones = listOf(
         "",
-        "один ",
-        "два ",
-        "три ",
-        "четыре ",
-        "пять ",
-        "шесть ",
-        "семь ",
-        "восемь ",
-        "девять "
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
     )
     val womanOnes = listOf(
         "",
-        "одна ",
-        "две ",
-        "три ",
-        "четыре ",
-        "пять ",
-        "шесть ",
-        "семь ",
-        "восемь ",
-        "девять "
+        "одна",
+        "две",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
     )
     val tens = listOf(
         "",
-        "десять ",
-        "двадцать ",
-        "тридцать ",
-        "сорок ",
-        "пятьдесят ",
-        "шестьдесят ",
-        "семьдесят ",
-        "восемьдесят ",
-        "девяносто "
+        "десять",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
     )
     val hundreds = listOf(
         "",
-        "сто ",
-        "двести ",
-        "триста ",
-        "четыреста ",
-        "пятьсот ",
-        "шестьсот ",
-        "семьсот ",
-        "восемьсот ",
-        "девятьсот "
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
     )
     val teens = listOf(
         "",
-        "одиннадцать ",
-        "двенадцать ",
-        "тринадцать ",
-        "четырнадцать ",
-        "пятнадцать ",
-        "шестнадцать ",
-        "семнадцать ",
-        "восемнадцать ",
-        "девятнадцать "
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
     )
-    val tensNum: String
-    var thousandsNum = ""
+    val result = mutableListOf<String>()
     val firstNum = tens[n / 10 % 10]
     val secondNum = ones[n % 10]
     val thirdNum = hundreds[n / 100 % 10]
@@ -331,26 +331,58 @@ fun russian(n: Int): String {
     val sixthNum = tens[n / 10000 % 10]
     val seventhNum = hundreds[n / 100000 % 10]
     if (n == 0) return "ноль"
-    tensNum = when (n % 100) {
-        in 11..19 -> teens[n % 10]
-        in 1..9 -> ones[n % 10]
-        else -> "$firstNum$secondNum"
-    }
-    when (n / 1000 % 100) {
-        in 11..19 -> thousandsNum = teens[n / 1000 % 10] + "тысяч "
-        in 2..4 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысячи "
-        in 5..9 -> thousandsNum = ones[n / 1000 % 10] + "тысяч "
-        1 -> thousandsNum = womanOnes[n / 1000 % 10] + "тысяча "
+    when (n % 100) {
+        in 11..19 -> result.add(teens[n % 10])
+        in 1..9 -> result.add(ones[n % 10])
         else -> {
-            if (n.toString().length > 3) {
-                if (n / 1000 % 10 == 0) thousandsNum = "$sixthNum$fifthNum" + "тысяч "
-                else when (n / 1000 % 10) {
-                    in 2..4 -> thousandsNum = "$sixthNum$fifthNum" + "тысячи "
-                    in 5..9 -> thousandsNum = "$sixthNum$fifthNum" + "тысяч "
-                    else -> thousandsNum = "$sixthNum$fifthNum" + "тысяча "
+            result.add(0, secondNum)
+            result.add(0, firstNum)
+        }
+    }
+    result.add(0, thirdNum)
+    when (n / 1000 % 100) {
+        in 11..19 -> {
+            result.add(0, teens[n / 1000 % 10])
+            result.add(1, "тысяч")
+        }
+        in 2..4 -> {
+            result.add(0, womanOnes[n / 1000 % 10])
+            result.add(1, "тысячи")
+        }
+        in 5..9 -> {
+            result.add(0, ones[n / 1000 % 10])
+            result.add(1, "тысяч")
+        }
+        1 -> {
+            result.add(0, womanOnes[n / 1000 % 10])
+            result.add(1, "тысяча")
+        }
+        else -> {
+            if (digitNumber(n) > 3) {
+                if (n / 1000 % 10 == 0) {
+                    result.add(0, fifthNum)
+                    result.add(0, sixthNum)
+                    result.add(2, "тысяч")
+                } else when (n / 1000 % 10) {
+                    in 2..4 -> {
+                        result.add(0, fifthNum)
+                        result.add(0, sixthNum)
+                        result.add(2, "тысячи")
+                    }
+                    in 5..9 -> {
+                        result.add(0, fifthNum)
+                        result.add(0, sixthNum)
+                        result.add(2, "тысяч")
+                    }
+                    else -> {
+                        result.add(0, fifthNum)
+                        result.add(0, sixthNum)
+                        result.add(2, "тысяча")
+                    }
                 }
             }
         }
     }
-    return (seventhNum + thousandsNum + thirdNum + tensNum).trim()
+    result.add(0, seventhNum)
+    return result.filter { it != "" }.joinToString(separator = " ")
 }
