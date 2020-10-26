@@ -271,16 +271,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((person, contacts) in friends) {
         result[person] = contacts.toMutableSet()
         val emptySet = mutableSetOf<String>()
-        emptySet.addAll(result[person] ?: setOf())
+        emptySet.addAll(result[person]!!)
         for (contactsName in contacts) {
             result[person]?.addAll(friends[contactsName] ?: setOf())
             if (contactsName !in result) result[contactsName] = mutableSetOf()
         }
         while (result[person] != emptySet) {
-            val dif = (result[person] ?: setOf()) - (emptySet)
-            emptySet.addAll(result[person] ?: setOf())
+            val dif = (result[person]!!) - (emptySet)
+            emptySet.addAll(result[person]!!)
             for (fr in dif) {
-                if (friends[fr] != null) result[person]?.addAll(friends[fr] ?: setOf())
+                if (friends[fr] != null) result[person]?.addAll(friends[fr]!!)
             }
         }
         result[person]?.remove(person)
