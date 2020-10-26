@@ -100,9 +100,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val resultGrades = mutableMapOf<Int, MutableList<String>>()
     for ((student, grade) in grades) {
         if (grade !in resultGrades) resultGrades[grade] = mutableListOf(student)
-        else {
-            resultGrades.getOrDefault(grade, mutableListOf()).add(student)
-        }
+        else resultGrades[grade]?.add(student)
     }
     return resultGrades
 }
@@ -308,17 +306,17 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val append = mutableListOf(-1, -1)
+    val pairsOfIndex = mutableListOf(-1, -1)
     for (x in 0..list.size - 2) {
         for (y in x + 1 until list.size) {
             if (list[x] + list[y] == number) {
-                append.add(0, y)
-                append.add(0, x)
-                break
+                pairsOfIndex.add(0, y)
+                pairsOfIndex.add(0, x)
+                return Pair(pairsOfIndex[0], pairsOfIndex[1])
             }
         }
     }
-    return Pair(append[0], append[1])
+    return Pair(-1, -1)
 }
 
 /**
