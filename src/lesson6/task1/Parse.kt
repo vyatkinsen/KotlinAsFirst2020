@@ -2,8 +2,6 @@
 
 package lesson6.task1
 
-import lesson2.task2.daysInMonth
-
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -144,10 +142,10 @@ fun plusMinus(expression: String): Int {
     val exp = expression.split(" ")
     for (element in exp) {
         if (element.length > 1 && (element.startsWith("+") || element.startsWith("-")))
-            throw IllegalArgumentException()
+            throw IllegalArgumentException("Нарушен формат входной строки")
     }
     var result = exp[0].toInt()
-    for (x in 0..exp.size - 2) {
+    for (x in 0..exp.size - 2 step 2) {
         when (exp[x + 1]) {
             "+" -> result += exp[x + 2].toInt()
             "-" -> result -= exp[x + 2].toInt()
@@ -179,20 +177,21 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val result = mutableMapOf<String, Double>()
-    val listToBuy = description.split("; ")
-    var maximumValue = -1.0
-    var maximumKey = ""
-    for (x in listToBuy) {
-        if (x == "") return x
-        val pairOfPurchase = x.split(" ")
-        result[pairOfPurchase[0]] = pairOfPurchase[1].toDouble()
-        if (maximumValue < pairOfPurchase[1].toDouble()) {
-            maximumValue = pairOfPurchase[1].toDouble()
-            maximumKey = pairOfPurchase[0]
+    val listToBuy = description.split("; ", " ")
+    return try {
+        var highestPrice = -1.0
+        var purchase = ""
+        for (x in 1 until listToBuy.size step 2) {
+            if (listToBuy[x].toDouble() < 0.0) throw NumberFormatException("Нарушен формат входной строки")
+            if (highestPrice < listToBuy[x].toDouble()) {
+                highestPrice = listToBuy[x].toDouble()
+                purchase = listToBuy[x - 1]
+            }
         }
+        purchase
+    } catch (e: NumberFormatException) {
+        "Нарушен формат входной строки"
     }
-    return maximumKey
 }
 
 /**
