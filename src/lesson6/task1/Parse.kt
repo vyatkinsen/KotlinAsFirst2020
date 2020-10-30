@@ -1,6 +1,8 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "TYPE_INFERENCE_ONLY_INPUT_TYPES_WARNING")
 
 package lesson6.task1
+
+import lesson2.task2.daysInMonth
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -138,7 +140,21 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val exp = expression.split(" ")
+    for (element in exp) {
+        if (element.length > 1 && (element.startsWith("+") || element.startsWith("-")))
+            throw IllegalArgumentException()
+    }
+    var result = exp[0].toInt()
+    for (x in 0..exp.size - 2) {
+        when (exp[x + 1]) {
+            "+" -> result += exp[x + 2].toInt()
+            "-" -> result -= exp[x + 2].toInt()
+        }
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -162,7 +178,22 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val result = mutableMapOf<String, Double>()
+    val listToBuy = description.split("; ")
+    var maximumValue = -1.0
+    var maximumKey = ""
+    for (x in listToBuy) {
+        if (x == "") return x
+        val pairOfPurchase = x.split(" ")
+        result[pairOfPurchase[0]] = pairOfPurchase[1].toDouble()
+        if (maximumValue < pairOfPurchase[1].toDouble()) {
+            maximumValue = pairOfPurchase[1].toDouble()
+            maximumKey = pairOfPurchase[0]
+        }
+    }
+    return maximumKey
+}
 
 /**
  * Сложная (6 баллов)
