@@ -176,21 +176,31 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
+
 fun mostExpensive(description: String): String {
-    val listToBuy = description.split("; ", " ")
+    val listToBuy = description.split("; ")
+    val listOfPairs = mutableListOf<Pair<String, Double>>()
+    var highestPrice = -1.0
+    var result = ""
     return try {
-        var highestPrice = -1.0
-        var purchase = ""
-        for (x in 1 until listToBuy.size step 2) {
-            if (listToBuy[x].toDouble() < 0.0) throw NumberFormatException("Нарушен формат входной строки")
-            if (highestPrice < listToBuy[x].toDouble()) {
-                highestPrice = listToBuy[x].toDouble()
-                purchase = listToBuy[x - 1]
+        for (element in listToBuy) {
+            val el = element.split(" ")
+            if (el.size > 1 && el[1].toDouble() >= 0) {
+                listOfPairs.add(Pair(el[0], el[1].toDouble()))
+            } else {
+                listOfPairs.clear()
+                break
             }
         }
-        purchase
+        for ((purchase, cost) in listOfPairs) {
+            if (highestPrice < cost) {
+                highestPrice = cost
+                result = purchase
+            }
+        }
+        result
     } catch (e: NumberFormatException) {
-        "Нарушен формат входной строки"
+        ""
     }
 }
 
