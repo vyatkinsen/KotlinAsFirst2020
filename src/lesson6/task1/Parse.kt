@@ -188,8 +188,7 @@ fun mostExpensive(description: String): String {
             if (el.size > 1 && el[1].toDouble() >= 0) {
                 listOfPairs.add(Pair(el[0], el[1].toDouble()))
             } else {
-                listOfPairs.clear()
-                break
+                return result
             }
         }
         for ((purchase, cost) in listOfPairs) {
