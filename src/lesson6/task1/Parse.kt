@@ -179,28 +179,22 @@ fun firstDuplicateIndex(str: String): Int = TODO()
 
 fun mostExpensive(description: String): String {
     val listToBuy = description.split("; ")
-    val listOfPairs = mutableListOf<Pair<String, Double>>()
+    val listOfPairs = mutableListOf<Pair<String, Double?>>()
     var highestPrice = -1.0
     var result = ""
-    return try {
-        for (element in listToBuy) {
-            val el = element.split(" ")
-            if (el.size > 1 && el[1].toDouble() >= 0) {
-                listOfPairs.add(Pair(el[0], el[1].toDouble()))
-            } else {
-                return result
-            }
-        }
-        for ((purchase, cost) in listOfPairs) {
-            if (highestPrice < cost) {
-                highestPrice = cost
-                result = purchase
-            }
-        }
-        result
-    } catch (e: NumberFormatException) {
-        ""
+    for (element in listToBuy) {
+        val el = element.split(" ")
+        if (el.size > 1 && el[1].toDoubleOrNull()!! >= 0)
+            listOfPairs.add(Pair(el[0], el[1].toDoubleOrNull()))
+        else return result
     }
+    for ((purchase, cost) in listOfPairs) {
+        if (highestPrice < cost!!) {
+            highestPrice = cost
+            result = purchase
+        }
+    }
+    return result
 }
 
 /**
