@@ -184,9 +184,8 @@ fun mostExpensive(description: String): String {
     var result = ""
     for (element in listToBuy) {
         val el = element.split(" ")
-        if (el.size > 1 && Regex("""\d+\.\d+""").matches(el[1]) && el[1].toDouble() >= 0)
-            listOfPairs.add(Pair(el[0], el[1].toDouble()))
-        else return result
+        if (el.size != 2 || el[1].toDoubleOrNull() == null || el[1].toDouble() < 0) return result
+        else listOfPairs.add(Pair(el[0], el[1].toDouble()))
     }
     for ((purchase, cost) in listOfPairs) {
         if (highestPrice < cost) {
