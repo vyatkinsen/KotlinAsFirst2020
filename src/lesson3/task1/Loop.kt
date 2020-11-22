@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 
@@ -247,7 +248,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var length = 0
+    var sqrt = 0
+    while (length < n) {
+        sqrt++
+        length += digitNumber(sqrt * sqrt)
+    }
+    return ((sqrt * sqrt) / 10.0.pow(length - n) % 10).toInt()
+}
 
 /**
  * Сложная (5 баллов)
@@ -258,4 +267,12 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var length = 0
+    var fibNumber = 0
+    while (length < n) {
+        fibNumber++
+        length += digitNumber(fib(fibNumber))
+    }
+    return (fib(fibNumber) / 10.0.pow(length - n) % 10).toInt()
+}
