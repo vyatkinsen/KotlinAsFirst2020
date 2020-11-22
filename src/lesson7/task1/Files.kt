@@ -127,14 +127,16 @@ fun centerFile(inputName: String, outputName: String) {
         listOfLines.add(line.trim())
         if (line.length > maxLineLength) maxLineLength = line.length
     }
-    for (line in listOfLines) {
-        var space = ""
-        while (space.length < (maxLineLength - line.length) / 2) {
-            space += " "
+    if (listOfLines.size != 1) {
+        for (line in listOfLines) {
+            var space = ""
+            while (space.length < (maxLineLength - line.length) / 2) {
+                space += " "
+            }
+            writer.write(space + line)
+            writer.newLine()
         }
-        writer.write(space + line)
-        writer.newLine()
-    }
+    } else writer.write(listOfLines[0])
     writer.close()
 }
 
