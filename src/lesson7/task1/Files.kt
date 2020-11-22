@@ -366,6 +366,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         finalStrToAdd = "$finalStrToAdd$plusString"
     }
+    if (!pS) finalStrToAdd = "$finalStrToAdd</p>"
     writer.write("<html><body>$finalStrToAdd</body></html>")
     writer.close()
 }
