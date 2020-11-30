@@ -22,26 +22,26 @@ import java.io.File
  * их следует сохранить и в выходном файле
  */
 fun alignFile(inputName: String, lineLength: Int, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
+    val it = File(outputName).bufferedWriter()
     var currentLineLength = 0
     fun append(word: String) {
         if (currentLineLength > 0) {
             if (word.length + currentLineLength >= lineLength) {
-                writer.newLine()
+                it.newLine()
                 currentLineLength = 0
             } else {
-                writer.write(" ")
+                it.write(" ")
                 currentLineLength++
             }
         }
-        writer.write(word)
+        it.write(word)
         currentLineLength += word.length
     }
     for (line in File(inputName).readLines()) {
         if (line.isEmpty()) {
-            writer.newLine()
+            it.newLine()
             if (currentLineLength > 0) {
-                writer.newLine()
+                it.newLine()
                 currentLineLength = 0
             }
             continue
@@ -50,7 +50,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
             append(word)
         }
     }
-    writer.close()
+    it.close()
 }
 
 /**
@@ -63,14 +63,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
-        if (!line.startsWith("_")) {
-            writer.write(line)
-            writer.newLine()
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            if (!line.startsWith("_")) {
+                it.write(line)
+                it.newLine()
+            }
         }
     }
-    writer.close()
 }
 
 /**
@@ -120,24 +120,24 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
     var maxLineLength = -1
     val listOfLines = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
         listOfLines.add(line.trim())
         if (line.length > maxLineLength) maxLineLength = line.length
     }
-    if (listOfLines.size != 1) {
-        for (line in listOfLines) {
-            var space = ""
-            while (space.length < (maxLineLength - line.length) / 2) {
-                space += " "
+    File(outputName).bufferedWriter().use {
+        if (listOfLines.size != 1) {
+            for (line in listOfLines) {
+                var space = ""
+                while (space.length < (maxLineLength - line.length) / 2) {
+                    space += " "
+                }
+                it.write(space + line)
+                it.newLine()
             }
-            writer.write(space + line)
-            writer.newLine()
-        }
-    } else writer.write(listOfLines[0])
-    writer.close()
+        } else it.write(listOfLines[0])
+    }
 }
 
 
@@ -308,67 +308,72 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val txt = "${File(inputName).readText()}  "
-    val writer = File(outputName).bufferedWriter()
+    val txt = File(inputName).readText().replace(Regex("""(\n\s+\n)"""), "☭")
     var pS = true // состояние открытости тэга "параграф" <p>
     var iS = false // состояние открытости тэга "курсив" *...*
     var bS = false //состояние открытости тэга "жирный" **...**
     var cS = false //состояние открытости тэга "зачеркнутый" ~~...~~
     var finalStrToAdd = ""
     var counter = 0
-    while (counter < txt.length - 2) {
-        val firstChar = txt[counter]
-        val secondChar = txt[counter + 1]
-        var plusString = ""
-        if (firstChar == '\n' && secondChar == '\n') {
-            if (!pS) plusString = "</p>"
-            pS = true
-            counter++
-        } else when {
-            firstChar == '*' && secondChar == '*' -> {
-                if (bS) {
-                    bS = false
-                    plusString = "</b>"
-                } else {
-                    bS = true
-                    plusString = "<b>"
+    File(outputName).bufferedWriter().use {
+        while (counter < txt.length) {
+            val firstChar = txt.getOrNull(counter) ?: ""
+            val secondChar = txt.getOrNull(counter + 1) ?: ""
+            var plusString = ""
+            when {
+                firstChar == '☭' -> {
+                    plusString = "</p><p>"
+                    counter++
                 }
-                counter += 2
-            }
-            firstChar == '*' -> {
-                if (iS) {
-                    iS = false
-                    plusString = "</i>"
-                } else {
-                    iS = true
-                    plusString = "<i>"
+                firstChar == '\n' && secondChar == '\n' -> {
+                    if (!pS) plusString = "</p>"
+                    pS = true
+                    counter++
                 }
-                counter++
-            }
-            firstChar == '~' && secondChar == '~' -> {
-                if (cS) {
-                    cS = false
-                    plusString = "</s>"
-                } else {
-                    cS = true
-                    plusString = "<s>"
+                firstChar == '*' && secondChar == '*' -> {
+                    if (bS) {
+                        bS = false
+                        plusString = "</b>"
+                    } else {
+                        bS = true
+                        plusString = "<b>"
+                    }
+                    counter += 2
                 }
-                counter += 2
+                firstChar == '*' -> {
+                    if (iS) {
+                        iS = false
+                        plusString = "</i>"
+                    } else {
+                        iS = true
+                        plusString = "<i>"
+                    }
+                    counter++
+                }
+                firstChar == '~' && secondChar == '~' -> {
+                    if (cS) {
+                        cS = false
+                        plusString = "</s>"
+                    } else {
+                        cS = true
+                        plusString = "<s>"
+                    }
+                    counter += 2
+                }
+                else -> {
+                    plusString = firstChar.toString()
+                    counter++
+                }
             }
-            else -> {
-                plusString = firstChar.toString()
-                counter++
+            if (pS && firstChar != '\n') {
+                pS = false
+                plusString = "<p>$plusString"
             }
+            finalStrToAdd = "$finalStrToAdd$plusString"
         }
-        if (pS && firstChar != '\n') {
-            pS = false
-            plusString = "<p>$plusString"
-        }
-        finalStrToAdd = "$finalStrToAdd$plusString"
+        if (!pS) finalStrToAdd = "$finalStrToAdd</p>"
+        it.write("<html><body>$finalStrToAdd</body></html>")
     }
-    if (!pS) finalStrToAdd = "$finalStrToAdd</p>"
-    writer.write("<html><body>$finalStrToAdd</body></html>")
-    writer.close()
 }
 
 
