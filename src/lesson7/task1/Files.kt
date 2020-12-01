@@ -119,7 +119,7 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
-fun centerFile(inputName: String, outputName: String) {
+fun centerFile(inputName: String, outputName: String) {             //Еще не исправлял.
     var maxLineLength = -1
     val listOfLines = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
@@ -308,74 +308,50 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val txt = File(inputName).readText().replace(Regex("""(\n\s+\n)"""), "☭")
-    var pS = true // состояние открытости тэга "параграф" <p>
-    var iS = false // состояние открытости тэга "курсив" *...*
-    var bS = false //состояние открытости тэга "жирный" **...**
-    var cS = false //состояние открытости тэга "зачеркнутый" ~~...~~
-    var finalStrToAdd = ""
-    var counter = 0
-    File(outputName).bufferedWriter().use {
-        while (counter < txt.length) {
-            val firstChar = txt.getOrNull(counter) ?: ""
-            val secondChar = txt.getOrNull(counter + 1) ?: ""
-            var plusString = ""
-            when {
-                firstChar == '☭' -> {
-                    plusString = "</p><p>"
-                    counter++
-                }
-                firstChar == '\n' && secondChar == '\n' -> {
-                    if (!pS) plusString = "</p>"
-                    pS = true
-                    counter++
-                }
-                firstChar == '*' && secondChar == '*' -> {
-                    if (bS) {
-                        bS = false
-                        plusString = "</b>"
-                    } else {
-                        bS = true
-                        plusString = "<b>"
-                    }
-                    counter += 2
-                }
-                firstChar == '*' -> {
-                    if (iS) {
-                        iS = false
-                        plusString = "</i>"
-                    } else {
-                        iS = true
-                        plusString = "<i>"
-                    }
-                    counter++
-                }
-                firstChar == '~' && secondChar == '~' -> {
-                    if (cS) {
-                        cS = false
-                        plusString = "</s>"
-                    } else {
-                        cS = true
-                        plusString = "<s>"
-                    }
-                    counter += 2
-                }
-                else -> {
-                    plusString = firstChar.toString()
-                    counter++
-                }
+    val txt = File(inputName).readLines()
+    val strBuilder = StringBuilder()
+    for ((index, line) in txt.withIndex()) {
+        if (line.trim().isEmpty() &&
+            txt[index - 1].isNotEmpty() &&
+            index != 0 &&
+            index != txt.size - 1
+        ) strBuilder.append("</p><p>")
+        else strBuilder.append(line)
+        strBuilder.append("")
+    }
+    /**
+     * Функция возвращает StringBuilder c замененными текстовыми знаками на тэги.
+     */
+    fun replaceTextMarkToTag(
+        line: StringBuilder,
+        separatorSequence: String,
+        openTag: String,
+        closeTag: String
+    ): StringBuilder {
+        val strBldr = StringBuilder()
+        val listOfLines = line.split(separatorSequence)
+        strBldr.append(listOfLines[0])
+        var tagStatus = true
+        for (i in 1 until listOfLines.size) {
+            tagStatus = if (tagStatus) {
+                strBldr.append(openTag)
+                false
+            } else {
+                strBldr.append(closeTag)
+                true
             }
-            if (pS && firstChar != '\n') {
-                pS = false
-                plusString = "<p>$plusString"
-            }
-            finalStrToAdd = "$finalStrToAdd$plusString"
+            strBldr.append(listOfLines[i])
         }
-        if (!pS) finalStrToAdd = "$finalStrToAdd</p>"
-        it.write("<html><body>$finalStrToAdd</body></html>")
+        return strBldr
+    }
+
+    var strToAdd = replaceTextMarkToTag(strBuilder, "**", "<b>", "</b>")
+    strToAdd = replaceTextMarkToTag(strToAdd, "*", "<i>", "</i>")
+    strToAdd = replaceTextMarkToTag(strToAdd, "~~", "<s>", "</s>")
+    File(outputName).bufferedWriter().use {
+        it.write("<html><body><p>$strToAdd</p></body></html>")
     }
 }
-
 
 /**
  * Сложная (23 балла)
