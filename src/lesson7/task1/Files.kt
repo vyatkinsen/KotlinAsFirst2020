@@ -311,10 +311,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val txt = File(inputName).readLines()
     val strBuilder = StringBuilder()
     for ((index, line) in txt.withIndex()) {
-        if (line.trim().isEmpty() &&
-            txt[index - 1].isNotEmpty() &&
-            index != 0 &&
-            index != txt.size - 1
+        if (index != 0 &&
+            index != txt.size - 1 &&
+            line.trim().isEmpty() &&
+            txt[index - 1].isNotEmpty()
         ) strBuilder.append("</p><p>")
         else strBuilder.append(line)
         strBuilder.append("")
