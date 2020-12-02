@@ -300,49 +300,55 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 
+/**
+ * Функция возвращает StringBuilder c замененными текстовыми знаками на тэги.
+ */
+
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val txt = File(inputName).readLines()
-    val strBuilder = StringBuilder()
+    val txtWithPar = txt.toMutableList()
     for ((index, line) in txt.withIndex()) {
         if (index != 0 &&
             index != txt.size - 1 &&
             line.trim().isEmpty() &&
             txt[index - 1].trim().isNotEmpty()
-        ) strBuilder.append("</p><p>")
-        else strBuilder.append(line)
-        strBuilder.append("")
+        ) {
+            txtWithPar.removeAt(index)
+            txtWithPar.add(index, ("</p><p>"))
+        }
     }
-    /**
-     * Функция возвращает StringBuilder c замененными текстовыми знаками на тэги.
-     */
+
     fun replaceTextMarkToTag(
-        line: StringBuilder,
+        lines: MutableList<String>,
         separatorSequence: String,
         openTag: String,
         closeTag: String
-    ): StringBuilder {
-        val strBldr = StringBuilder()
-        val listOfLines = line.split(separatorSequence)
-        strBldr.append(listOfLines[0])
+    ): MutableList<String> {
+        val txtWithTag = mutableListOf<String>()
         var tagStatus = true
-        for (index in 1 until listOfLines.size) {
-            tagStatus = if (tagStatus) {
-                strBldr.append(openTag)
-                false
-            } else {
-                strBldr.append(closeTag)
-                true
+        for (l in lines.indices) {
+            val listOfLines = lines[l].split(separatorSequence)
+            txtWithTag.add(listOfLines[0])
+            for (index in 1 until listOfLines.size) {
+                tagStatus = if (tagStatus) {
+                    txtWithTag.add(openTag)
+                    false
+                } else {
+                    txtWithTag.add(closeTag)
+                    true
+                }
+                txtWithTag.add(listOfLines[index])
             }
-            strBldr.append(listOfLines[index])
         }
-        return strBldr
+        return txtWithTag
     }
 
-    var strToAdd = replaceTextMarkToTag(strBuilder, "**", "<b>", "</b>")
-    strToAdd = replaceTextMarkToTag(strToAdd, "*", "<i>", "</i>")
-    strToAdd = replaceTextMarkToTag(strToAdd, "~~", "<s>", "</s>")
+    var txtToAdd = replaceTextMarkToTag(txtWithPar, "**", "<b>", "</b>")
+    txtToAdd = replaceTextMarkToTag(txtToAdd, "*", "<i>", "</i>")
+    txtToAdd = replaceTextMarkToTag(txtToAdd, "~~", "<s>", "</s>")
     File(outputName).bufferedWriter().use {
-        it.write("<html><body><p>$strToAdd</p></body></html>")
+        it.write("<html><body><p>${txtToAdd.joinToString(separator = "")}</p></body></html>")
     }
 }
 
