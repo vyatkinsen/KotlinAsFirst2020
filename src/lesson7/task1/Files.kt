@@ -299,12 +299,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
-
-/**
- * Функция возвращает StringBuilder c замененными текстовыми знаками на тэги.
- */
-
-
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val txt = File(inputName).readLines()
     val txtWithPar = txt.toMutableList()
@@ -318,7 +312,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             txtWithPar.add(index, ("</p><p>"))
         }
     }
-
+    /**
+     * Функция возвращает лист c замененными текстовыми знаками на тэги.
+     */
     fun replaceTextMarkToTag(
         lines: MutableList<String>,
         separatorSequence: String,
@@ -518,4 +514,3 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
-
