@@ -307,7 +307,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (index != 0 &&
             index != txt.size - 1 &&
             line.trim().isEmpty() &&
-            txt[index - 1].isNotEmpty()
+            txt[index - 1].trim().isNotEmpty()
         ) strBuilder.append("</p><p>")
         else strBuilder.append(line)
         strBuilder.append("")
@@ -325,7 +325,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         val listOfLines = line.split(separatorSequence)
         strBldr.append(listOfLines[0])
         var tagStatus = true
-        for (i in 1 until listOfLines.size) {
+        for (index in 1 until listOfLines.size) {
             tagStatus = if (tagStatus) {
                 strBldr.append(openTag)
                 false
@@ -333,7 +333,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 strBldr.append(closeTag)
                 true
             }
-            strBldr.append(listOfLines[i])
+            strBldr.append(listOfLines[index])
         }
         return strBldr
     }
