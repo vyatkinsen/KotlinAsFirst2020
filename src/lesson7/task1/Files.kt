@@ -124,22 +124,15 @@ fun centerFile(inputName: String, outputName: String) {
     val listOfLines = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
         listOfLines.add(line.trim())
-        if (line.length > maxLineLength) maxLineLength = line.length
+        if (line.trim().length > maxLineLength) maxLineLength = line.trim().length
     }
     File(outputName).bufferedWriter().use {
-        if (listOfLines.size != 1) {
-            for (line in listOfLines) {
-                var space = ""
-                while (space.length < (maxLineLength - line.trim().length) / 2) {
-                    space += " "
-                }
-                it.write(space + line.trim())
-                it.newLine()
-            }
-        } else it.write(listOfLines[0])
+        for (line in listOfLines) {
+            it.write(" ".repeat((maxLineLength - line.trim().length) / 2) + line)
+            it.newLine()
+        }
     }
 }
-
 
 /**
  * Сложная (20 баллов)
