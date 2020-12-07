@@ -121,14 +121,13 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     var maxLineLength = -1
-    val listOfLines = mutableListOf<String>()
+    val txt = File(inputName).readLines().map{it.trim()}
     for (line in File(inputName).readLines()) {
-        listOfLines.add(line.trim())
-        if (line.trim().length > maxLineLength) maxLineLength = line.trim().length
+        if (line.length > maxLineLength) maxLineLength = line.length
     }
     File(outputName).bufferedWriter().use {
-        for (line in listOfLines) {
-            it.write(" ".repeat((maxLineLength - line.trim().length) / 2) + line)
+        for (line in txt) {
+            it.write(" ".repeat((maxLineLength - line.length) / 2) + line)
             it.newLine()
         }
     }
@@ -307,10 +306,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             index != txt.size - 1 &&
             line.trim().isEmpty() &&
             txt[index - 1].trim().isNotEmpty()
-        ) {
-            txtWithPar.removeAt(index)
-            txtWithPar.add(index, ("</p><p>"))
-        }
+        ) txtWithPar[index] = "</p><p>"
     }
     /**
      * Функция возвращает лист c замененными текстовыми знаками на тэги.
@@ -324,9 +320,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         val txtWithTag = mutableListOf<String>()
         var tagStatus = true
         for (l in lines.indices) {
-            val listOfLines = lines[l].split(separatorSequence)
-            txtWithTag.add(listOfLines[0])
-            for (index in 1 until listOfLines.size) {
+            val listOfSeparatedLine = lines[l].split(separatorSequence)
+            txtWithTag.add(listOfSeparatedLine[0])
+            for (index in 1 until listOfSeparatedLine.size) {
                 tagStatus = if (tagStatus) {
                     txtWithTag.add(openTag)
                     false
@@ -334,7 +330,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     txtWithTag.add(closeTag)
                     true
                 }
-                txtWithTag.add(listOfLines[index])
+                txtWithTag.add(listOfSeparatedLine[index])
             }
         }
         return txtWithTag
@@ -497,20 +493,20 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-19935 | 22
+ 19935 | 22
 -198     906
 ----
-13
--0
---
-135
--132
-----
-3
+   13
+  -0
+   --
+   135
+  -132
+  ----
+     3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String){
     TODO()
 }
