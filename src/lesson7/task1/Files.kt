@@ -305,11 +305,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (index != 0 &&
             index != txt.size - 1 &&
             line.trim().isEmpty() &&
-            txt[index - 1].trim().isNotEmpty()
-        ) {
-            txtWithPar.removeAt(index)
-            txtWithPar.add(index, ("</p><p>"))
-        }
+            txt[index - 1].trim().isNotEmpty() &&
+            txt[index + 1].trim().isNotEmpty()
+        ) txtWithPar[index] = "</p><p>"
     }
     /**
      * Функция возвращает лист c замененными текстовыми знаками на тэги.
